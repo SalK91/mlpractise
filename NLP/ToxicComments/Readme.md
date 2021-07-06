@@ -11,7 +11,7 @@ Identify and classify toxic online comments
 -  Count Vectorizer via Sklearn
 -  Tf-idf transformation via Sklearn.
 
-## Classification Models
+## Machine Learning Classification Models
 -  ML Models and Hyper Parameter Search via TPOT Classifier (Sparse Config.)
 
 ### Model Accuracy Results:
