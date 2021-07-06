@@ -14,6 +14,11 @@ Identify and classify toxic online comments
 ## Classification Models
 -  ML Models and Hyper Parameter Search via TPOT Classifier (Sparse Config.)
 
+## Model Accuracy Results:
+- Model 1: Manual Data Processing and LR Models
+  -
+  -
+
 ## Next Steps
 -  Bigrams and Triagams?
 -  Jaccardi Distance for Spelling errors?
