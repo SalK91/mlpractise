@@ -39,9 +39,9 @@ Identify and classify toxic online comments
   - Recall = 0.83
   - F-1 score = 0.68
 
+- Model 5: Sklearn Tf-IDF (with uni/bi and tri-grams)
 
 ## Next Steps
--  Bigrams and Triagams?
 -  Jaccardi Distance for Spelling errors?
 -  Multinomial vs Binomial NB?
 -  Pre-Trained Embedding Layers?
