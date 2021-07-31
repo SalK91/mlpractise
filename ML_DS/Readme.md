@@ -2,6 +2,9 @@
 
 # Online Shopping behavior
 
+Case study of basic ML Supervised, Un-supervised, and semi-supervised models on structured data for a classical classification and clustering problem.
+
+
 ## Data Source:
 Online Shoppers Purchasing Intention Dataset
 Data Set https://www.kaggle.com/henrysue/online-shoppers-intention
