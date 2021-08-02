@@ -84,8 +84,12 @@ Recall = 0.677,
 F1-score = 0.695
 Confusion Matrix: [[1843 53] [ 63 132]]
 
-## 2: Unsuperivsed model
+# 2: Unsuperivsed model
 User-bahavior clusters based on the purchasing behavior data for the complete dataset.
 
+For the clustering task we will start from these features and will be using a combinataion of PCA and K-Means. PCA will reduce dimenstion of data and k-means will be executed on the reduced data.
+
 # 3: Semi-supervised Learning
-Improve performance with un-labeled data in training?
+Can we Improve performance with un-labeled data in training?
+
+For semi-supervised learning Label-spreading was chosed as the choice of algorithm of choice. 
