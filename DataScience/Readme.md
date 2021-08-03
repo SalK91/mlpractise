@@ -1,8 +1,6 @@
--- Colab Notebook
+-- Originally a  Colab Notebook
 
-# Online Shopping behavior
-
-Case study of basic ML Supervised, Un-supervised, and semi-supervised models on structured data for a classical classification and clustering problem.
+A short-case study of application of Supervised, Un-supervised, and semi-supervised models on structured data for a classical classification and clustering problem.
 
 
 ## Data Source:
@@ -16,13 +14,13 @@ This data set represents skewed data, such that 84.5% of user journeys did NOT r
 ```
 a. The dataset consists of 10 numerical and 8 categorical attributes.
 b. The 'Revenue' attribute can be used as the class label.
-c. "Administrative", "Administrative Duration", "Informational", "Informational Duration", "Product Related" and "Product Related Duration" represent the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories. 
-d. The values of these features are derived from the URL information of the pages visited by the user and updated in real time when a user takes an action, e.g. moving from one page to another. 
-e. The "Bounce Rate", "Exit Rate" and "Page Value" features represent the metrics measured by "Google Analytics" for each page in the e-commerce site. 
-f. The value of "Bounce Rate" feature for a web page refers to the percentage of visitors who enter the site from that page and then leave ("bounce") without triggering any other requests to the analytics server during that session. 
-g. The value of "Exit Rate" feature for a specific web page is calculated as for all pageviews to the page and it represents the percentage that the page was seen in the last session. 
-h. The "Page Value" feature represents the average value for a web page that a user visited before completing an e-commerce transaction. 
-i. The "Special Day" feature indicates the closeness of the site visiting time to a specific special day (e.g. Mother’s Day, Valentine's Day) in which the sessions are more likely to be finalized with transaction. The value of this attribute is determined by considering the dynamics of e-commerce such as the duration between the order date and delivery date. 
+c. "Administrative", "Administrative Duration", "Informational", "Informational Duration", "Product Related" and "Product Related Duration" represent the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories.
+d. The values of these features are derived from the URL information of the pages visited by the user and updated in real time when a user takes an action, e.g. moving from one page to another.
+e. The "Bounce Rate", "Exit Rate" and "Page Value" features represent the metrics measured by "Google Analytics" for each page in the e-commerce site.
+f. The value of "Bounce Rate" feature for a web page refers to the percentage of visitors who enter the site from that page and then leave ("bounce") without triggering any other requests to the analytics server during that session.
+g. The value of "Exit Rate" feature for a specific web page is calculated as for all pageviews to the page and it represents the percentage that the page was seen in the last session.
+h. The "Page Value" feature represents the average value for a web page that a user visited before completing an e-commerce transaction.
+i. The "Special Day" feature indicates the closeness of the site visiting time to a specific special day (e.g. Mother’s Day, Valentine's Day) in which the sessions are more likely to be finalized with transaction. The value of this attribute is determined by considering the dynamics of e-commerce such as the duration between the order date and delivery date.
 j. The dataset also includes operating system, browser, region, traffic type, visitor type as returning or new visitor, a Boolean value indicating whether the date of the visit is weekend, and month of the year.
 ```
 
@@ -92,4 +90,4 @@ For the clustering task we will start from these features and will be using a co
 # 3: Semi-supervised Learning
 Can we Improve performance with un-labeled data in training?
 
-For semi-supervised learning Label-spreading was chosed as the choice of algorithm of choice. 
+For semi-supervised learning Label-spreading was chosed as the choice of algorithm of choice.
