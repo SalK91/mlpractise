@@ -88,6 +88,5 @@ User-bahavior clusters based on the purchasing behavior data for the complete da
 For the clustering task we will start from these features and will be using a combinataion of PCA and K-Means. PCA will reduce dimenstion of data and k-means will be executed on the reduced data.
 
 # 3: Semi-supervised Learning
-Can we Improve performance with un-labeled data in training?
-
-For semi-supervised learning Label-spreading was chosed as the choice of algorithm of choice.
+Can we Improve performance with unlabeled data in training?
+For semi-supervised learning Label spreading was chosen as the choice of algorithm of choice.
