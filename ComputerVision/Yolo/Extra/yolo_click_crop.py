@@ -29,8 +29,8 @@ def click_and_crop(event, x, y, flags, param):
 		refPt.append((x, y))
 		cropping = False
 		# draw a rectangle around the region of interest
-		cv2.rectangle(image, refPt[0], refPt[1], (0, 255, 0), 2)
-		cv2.imshow("image", image)
+		#cv2.rectangle(image, refPt[0], refPt[1], (0, 255, 0), 2)
+		#cv2.imshow("image", image)
 ##################################################################################################################
 
 # construct the argument parse and parse the arguments
@@ -148,11 +148,11 @@ while True:
 	cv2.imshow("image", image)
 	key = cv2.waitKey(1) & 0xFF
 	# if the 'r' key is pressed, reset the cropping region
-	if key == ord("r"):
-		image = clone.copy()
+	#if key == ord("r"):
+	#	image = clone.copy()
 	# if the 'c' key is pressed, break from the loop
-	elif key == ord("c"):
-		break
+	#elif key == ord("c"):
+	break
 
 # if there are two reference points, then crop the region of interest
 # from the image and display it

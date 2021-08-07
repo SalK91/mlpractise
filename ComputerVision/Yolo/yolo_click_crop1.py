@@ -1,12 +1,10 @@
-
-
 # import the necessary packages
 import numpy as np
 import argparse
 import time
 import cv2
 import os
-
+from math import hypot
 
 ## FUNCTIONS
 
@@ -31,6 +29,14 @@ def click_and_crop(event, x, y, flags, param):
 		# draw a rectangle around the region of interest
 		cv2.rectangle(image, refPt[0], refPt[1], (0, 255, 0), 2)
 		cv2.imshow("image", image)
+
+
+
+def distance(p1,p2):
+    """Euclidean distance between two points."""
+    x1,y1 = p1
+    x2,y2 = p2
+    return hypot(x2 - x1, y2 - y1)
 ##################################################################################################################
 
 # construct the argument parse and parse the arguments
@@ -50,8 +56,7 @@ labelsPath = os.path.sep.join([args["yolo"], "coco.names"])
 LABELS = open(labelsPath).read().strip().split("\n")
 # initialize a list of colors to represent each possible class label
 np.random.seed(42)
-COLORS = np.random.randint(0, 255, size=(len(LABELS), 3),
-	dtype="uint8")
+COLORS = np.random.randint(0, 255, size=(len(LABELS), 3),dtype="uint8")
 
 # derive the paths to the YOLO weights and model configuration
 weightsPath = os.path.sep.join([args["yolo"], "yolov3.weights"])
@@ -62,6 +67,8 @@ net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
 # load our input image and grab its spatial dimensions
 image = cv2.imread(args["image"])
+clone = image.copy()
+
 (H, W) = image.shape[:2]
 # determine only the *output* layer names that we need from YOLO
 ln = net.getLayerNames()
@@ -83,6 +90,7 @@ print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 boxes = []
 confidences = []
 classIDs = []
+centers = []
 
 # loop over each of the layer outputs
 for output in layerOutputs:
@@ -109,6 +117,7 @@ for output in layerOutputs:
 			# update our list of bounding box coordinates, confidences,
 			# and class IDs
 			boxes.append([x, y, int(width), int(height)])
+			centers.append((x,y))
 			confidences.append(float(confidence))
 			classIDs.append(classID)
 
@@ -130,8 +139,7 @@ if len(idxs) > 0:
 		color = [int(c) for c in COLORS[classIDs[i]]]
 		cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
 		text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
-		cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
-			0.5, color, 2)
+		cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 # show the output image
 
 print('All Possible Bounding Boxes')
@@ -139,7 +147,7 @@ print(boxes)
 print(classIDs)
 
 
-clone = image.copy()
+#clone = image.copy()
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", click_and_crop)
 # keep looping until the 'q' key is pressed
@@ -147,18 +155,22 @@ while True:
 	# display the image and wait for a keypress
 	cv2.imshow("image", image)
 	key = cv2.waitKey(1) & 0xFF
-	# if the 'r' key is pressed, reset the cropping region
-	if key == ord("r"):
-		image = clone.copy()
-	# if the 'c' key is pressed, break from the loop
-	elif key == ord("c"):
+
+    #Double Click Break
+	if(len(refPt)==2):
 		break
+
 
 # if there are two reference points, then crop the region of interest
 # from the image and display it
 if len(refPt) == 2:
 	roi = clone[refPt[0][1]:refPt[1][1], refPt[0][0]:refPt[1][0]]
-	cv2.imshow("ROI", roi)
+
+	x = refPt[0][0]
+	y = refPt[0][1]
+	click_pos = (x, y)
+	distance = [distance(click_pos, x) for x in centers]
+
 
 	#print("[INFO] User Box Coodinates  x-axis {0} to {1} ".format(refPt[0][0], refPt[1][0]))
 	#print("[INFO] User Box Coodinates  y-axis {0} to {1} ".format(refPt[0][1], refPt[1][1]))
@@ -166,8 +178,31 @@ if len(refPt) == 2:
 																					   refPt[0][1],
 																					   (refPt[1][0] - refPt[0][0]),
 																					   (refPt[1][1] - refPt[1][0])))
+	index = distance.index(min(distance))
+	#print(boxes[index])
+	print(refPt)
+	# cv2.imshow("ROI", roi)
 
+    #CROP
 
+	x = boxes[index][0]
+	y = boxes[index][1]
+	w = boxes[index][2]
+	h = boxes[index][3]
+
+	x1 = round(max(x+w/2-1.5*w/2, 1))
+	y1 = round(max(y+h/2-1.5*h/2, 1))
+	x2 = round(x1 + 1.5*w)
+	y2 = round(y1 + 1.5*h)
+
+	ret = [(x1,y1)]
+	ret.append((x2, y2))
+
+	print(ret)
+	roi = clone[ret[0][1]:ret[1][1], ret[0][0]:ret[1][0]]
+	cv2.imshow("ROI", roi)
+
+	#print(roi)
 
 	cv2.waitKey(0)
 
