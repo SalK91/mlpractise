@@ -32,7 +32,7 @@ b. Hyper-parameter fitting process.
 c. Comparison with T-POT model search
 
 ### Results
-The training data after feature selection has m ~30 features and number of training records n ~ 7K. For this scale of data and features generarlly logistic regression and SVM are advised.
+The training data after feature selection has m ~30 features and number of training records n ~ 7K. For this scale of data and features generally logistic regression and SVM are advised.
 
 For the problem we would like to accurate in terms of prediction of right classes an would like a model which is reasonable in both precision and recall and hence f1-score is the choice of metric for the most optimal model.
 
