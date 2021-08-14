@@ -13,3 +13,4 @@ ComputerVision/Yolo/PolyRNN/models/poly/checkpoint
 ComputerVision/Yolo/PolyRNN/models/poly/polygonplusplus.ckpt.index
 ComputerVision/Yolo/PolyRNN/models/poly/polygonplusplus.ckpt.meta
 ComputerVision/Yolo/PolyRNN/models/README.md
+*.weights
