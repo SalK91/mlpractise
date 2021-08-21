@@ -1,8 +1,10 @@
+#import flask
 from flask import Flask
 
+# Create application instance - WSGI protocol
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/') # Slash means domain name only
 def index():
     return('Hello World')
 

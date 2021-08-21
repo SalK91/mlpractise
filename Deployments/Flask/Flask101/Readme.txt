@@ -14,6 +14,9 @@ Anaconda prompt (run as administrator):
 Step 2. Install flask.
   a. pip install flask
 
+-- Use pip freeze to check all packages installed
+-- Use python -V to check version
+
 Step 3. Create flask basic example.
   a. Create app.py
 
@@ -23,6 +26,7 @@ Step 4. Add your app.py in FLASK_APP Environment variable
 
 Step 5. run app!
 python app.py
+
 
 ----------------------------------------------------------------------------
 #Reloader
