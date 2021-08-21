@@ -22,7 +22,7 @@ import skimage.io as io
 
 ## FUNCTIONS
 
-#CLICK CROP
+#CLICK LOCATION:
 refPt = []
 cropping = False
 def click_and_crop(event, x, y, flags, param):
@@ -44,12 +44,40 @@ def click_and_crop(event, x, y, flags, param):
 		cv2.rectangle(image, refPt[0], refPt[1], (0, 255, 0), 2)
 		cv2.imshow("image", image)
 
+#CLICK COUNTER
+count=0
+def counter(event, x, y, flags, param):
+    global count
+    if event == cv2.EVENT_LBUTTONDOWN:
+        count = count +1
+
+#Click and Annotate
+def marker(event, x, y, flags, param):
+	global markers
+	global stop
+
+	if event == cv2.EVENT_LBUTTONDBLCLK:
+		center = (x,y)
+		markers.append([x, y])
+		radius = 5
+		cv2.circle(param, center, radius, (0,0,255), 2)
+		isClosed = False
+		thickness = 1
+		color = (0, 255, 0)
+		cv2.polylines(param,[np.array(markers)],isClosed, color,thickness)
+		print(markers)
+
+	if event == cv2.EVENT_RBUTTONDBLCLK:
+		stop=1
+
 def distance(p1,p2):
 #"""Euclidean distance between two points."""
 	xx1, yy1 = p1
 	xx2, yy2 = p2
 	return hypot(xx2 - xx1, yy2 - yy1)
-##################################################################################################################
+
+
+#region Yolo Inference
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -152,24 +180,31 @@ if len(idxs) > 0:
 		text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
 		cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
+#endregion
+ 
 
 
 cv2.namedWindow("image")
 cv2.setMouseCallback("image", click_and_crop)
 
-# keep looping until double click
 while True:
 	# display the image and wait for a keypress
 	cv2.imshow("image", image)
 	key = cv2.waitKey(1) & 0xFF
     #Double Click Break
+
 	if(len(refPt)>=2):
+		cv2.waitKey(1)
+		cv2.destroyWindow("image")
 		break
 
 
-# if there are two reference points, then crop the region of interest
-# from the image and display it
+#import time
+#print("something")
+#time.sleep(1)    # Pause 5.5 seconds
+#print("something")
 
+#region crop to nearest bounding box 
 if len(refPt) >= 2:
 	roi = clone[refPt[0][1]:refPt[1][1], refPt[0][0]:refPt[1][0]]
 	x = refPt[0][0]
@@ -200,18 +235,30 @@ if len(refPt) >= 2:
 	ret = [(x1,y1)]
 	ret.append((x2, y2))
 	roi = clone[ret[0][1]:ret[1][1], ret[0][0]:ret[1][0]]
-	cv2.imshow("ROI", roi)
-	cv2.imwrite("CroppedImage.png", roi)
+#endregion
 
-	cv2.waitKey(0)
 
+markers = []
+stop    = 0
+cv2.namedWindow("dot")
+cv2.setMouseCallback("dot", marker, param=roi)
+while True:
+	cv2.imshow("dot", roi)
+	key = cv2.waitKey(1) & 0xFF
+	if stop==1:
+		cv2.waitKey(1)
+		cv2.destroyWindow("dot")
+		break
+
+print(markers)
+ 
 
 # close all open windows
-cv2.destroyAllWindows()
+# cv2.destroyAllWindows()
 
 
-## Poly RNN
-##
+#region  Poly RNN Inference
+
 from PIL import Image
 im = Image.open('CroppedImage.png')
 width, height = im.size
@@ -277,7 +324,7 @@ preds = [model.do_test(polySess, image_np, top_k) for top_k in range(_FIRST_TOP_
 
 # sort predictions based on the eval score to pick the best.
 preds = sorted(preds, key=lambda x: x['scores'][0], reverse=True)
-
+#endregion
 
 #Visualizing TOP_K and scores
 import matplotlib.pyplot as plt
@@ -300,11 +347,33 @@ refinedPoly=preds_gnn['polys_ggnn']
 #vis_polys(ax,image_np[0],refinedPoly[0], title='PolygonRNN++')
 #plt.show()
 
-print(refinedPoly[0])
-cv2.imshow("RNN", image_np[0])
-cv2.waitKey(0) 
+image =image_np[0]
+rnn_markers =  refinedPoly[0]
 
-#cv2.destroyAllWindows("")
-#python yolo_click_crop2.py --image image_0.jpg --yolo yolo-coco
-# python yolo_click_crop2.py --image image_0.jpg --yolo yolo-coco
+h, w = image.shape[:2]
+rnn_markers[:, 0] = round(rnn_markers[:, 0] * w,0)
+rnn_markers[:, 1] = round(rnn_markers[:, 1] * h,0)
+
+print(rnn_markers)
+print(image)
+count=0
+cv2.namedWindow("RNN")
+cv2.setMouseCallback("RNN", counter)
+
+
+
+
+while True:
+	# display the image and wait for a keypress
+	cv2.imshow("RNN", image)
+	cv2.polylines(image,[np.array(rnn_markers)],False, (0,255,0),2)
+
+	key = cv2.waitKey(1) & 0xFF
+    #Double Click Break
+
+	if(count>=2):
+		cv2.waitKey(1)
+		cv2.destroyWindow("RNN")
+		break
+ 
 
