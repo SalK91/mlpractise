@@ -354,6 +354,7 @@ h, w = image.shape[:2]
 rnn_markers[:, 0] = np.round(rnn_markers[:, 0] * w,0)
 rnn_markers[:, 1] = np.round(rnn_markers[:, 1] * h,0)
 rnn_markers = rnn_markers.tolist()
+rnn_markers = [[int(x) for x in sublist] for sublist in rnn_markers]
 print(rnn_markers)
 print(image)
 #print(type(rnn_markers))
@@ -370,9 +371,11 @@ while True:
 	# display the image and wait for a keypress
 	cv2.imshow("RNN", roi)
 	isClosed = False
-	thickness = 1
+	thickness = 2
 	color = (0, 255, 0)
 	cv2.polylines(roi,[np.array(rnn_markers, dtype=np.int32)],isClosed, color,thickness)
+	for point in rnn_markers:
+		cv2.circle(roi,tuple(point),1,(0,0,255))
 
 	key = cv2.waitKey(1) & 0xFF
     #Double Click Break
