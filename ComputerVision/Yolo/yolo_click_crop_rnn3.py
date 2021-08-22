@@ -351,11 +351,14 @@ image =image_np[0]
 rnn_markers =  refinedPoly[0]
 
 h, w = image.shape[:2]
-rnn_markers[:, 0] = round(rnn_markers[:, 0] * w,0)
-rnn_markers[:, 1] = round(rnn_markers[:, 1] * h,0)
-
+rnn_markers[:, 0] = np.round(rnn_markers[:, 0] * w,0)
+rnn_markers[:, 1] = np.round(rnn_markers[:, 1] * h,0)
+rnn_markers = rnn_markers.tolist()
 print(rnn_markers)
 print(image)
+#print(type(rnn_markers))
+#print(rnn_markers.shape)
+
 count=0
 cv2.namedWindow("RNN")
 cv2.setMouseCallback("RNN", counter)
@@ -365,8 +368,11 @@ cv2.setMouseCallback("RNN", counter)
 
 while True:
 	# display the image and wait for a keypress
-	cv2.imshow("RNN", image)
-	cv2.polylines(image,[np.array(rnn_markers)],False, (0,255,0),2)
+	cv2.imshow("RNN", roi)
+	isClosed = False
+	thickness = 1
+	color = (0, 255, 0)
+	cv2.polylines(roi,[np.array(rnn_markers, dtype=np.int32)],isClosed, color,thickness)
 
 	key = cv2.waitKey(1) & 0xFF
     #Double Click Break
