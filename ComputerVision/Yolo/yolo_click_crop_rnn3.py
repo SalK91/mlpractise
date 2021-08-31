@@ -387,7 +387,7 @@ while True:
  
 
 ## C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn3.py --image image_0.jpg --yolo yolo-coco
-##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn3.py --image dog.jpg --yolo yolo-coco
+## C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn3.py --image dog.jpg --yolo yolo-coco
 
 
 
