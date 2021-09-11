@@ -19,6 +19,54 @@ import skimage.io as io
 #import os
 #os.system("python yourfile.py")
 
+## RNN LOAD
+##
+#External PATHS
+PolyRNN_metagraph='./polyrnn/models/poly/polygonplusplus.ckpt.meta'
+PolyRNN_checkpoint='./polyrnn/models/poly/polygonplusplus.ckpt'
+EvalNet_checkpoint='./polyrnn/models/evalnet/evalnet.ckpt'
+GGNN_metagraph='./polyrnn/models/ggnn/ggnn.ckpt.meta'
+GGNN_checkpoint='./polyrnn/models/ggnn/ggnn.ckpt'
+#Const
+_BATCH_SIZE=1
+_FIRST_TOP_K = 6
+
+# Creating the graphs
+evalGraph = tf.Graph()
+polyGraph = tf.Graph()
+ggnnGraph = tf.Graph()
+#Initializing and restoring the evaluator net.
+with evalGraph.as_default():
+	with tf.variable_scope("discriminator_network"):
+		evaluator = EvalNet(_BATCH_SIZE)
+		evaluator.build_graph()
+	saver = tf.train.Saver()
+
+	# Start session
+	evalSess = tf.Session(config=tf.ConfigProto(
+		allow_soft_placement=True
+	), graph=evalGraph)
+	saver.restore(evalSess, EvalNet_checkpoint)
+
+#Initializing and restoring PolyRNN++
+model = PolygonModel(PolyRNN_metagraph, polyGraph)
+model.register_eval_fn(lambda input_: evaluator.do_test(evalSess, input_))
+polySess = tf.Session(config=tf.ConfigProto(
+	allow_soft_placement=True
+), graph=polyGraph)
+model.saver.restore(polySess, PolyRNN_checkpoint)
+
+
+#Initializing and restoring GGNN
+ggnnGraph = tf.Graph()
+ggnnModel = GGNNPolygonModel(GGNN_metagraph, ggnnGraph)
+ggnnSess = tf.Session(config=tf.ConfigProto(
+	allow_soft_placement=True
+), graph=ggnnGraph)
+
+ggnnModel.saver.restore(ggnnSess,GGNN_checkpoint)
+
+	#INPUT IMG CROP (224x224x3) -> object should be centered
 
 ## FUNCTIONS
 
@@ -313,53 +361,7 @@ if run_rnn==1:
 	im1 = im.resize(newsize)
 	im1 = im1.save("image_resize.png")
 
-	##
-	#External PATHS
-	PolyRNN_metagraph='./polyrnn/models/poly/polygonplusplus.ckpt.meta'
-	PolyRNN_checkpoint='./polyrnn/models/poly/polygonplusplus.ckpt'
-	EvalNet_checkpoint='./polyrnn/models/evalnet/evalnet.ckpt'
-	GGNN_metagraph='./polyrnn/models/ggnn/ggnn.ckpt.meta'
-	GGNN_checkpoint='./polyrnn/models/ggnn/ggnn.ckpt'
-	#Const
-	_BATCH_SIZE=1
-	_FIRST_TOP_K = 6
 
-	# Creating the graphs
-	evalGraph = tf.Graph()
-	polyGraph = tf.Graph()
-	ggnnGraph = tf.Graph()
-	#Initializing and restoring the evaluator net.
-	with evalGraph.as_default():
-		with tf.variable_scope("discriminator_network"):
-			evaluator = EvalNet(_BATCH_SIZE)
-			evaluator.build_graph()
-		saver = tf.train.Saver()
-
-		# Start session
-		evalSess = tf.Session(config=tf.ConfigProto(
-			allow_soft_placement=True
-		), graph=evalGraph)
-		saver.restore(evalSess, EvalNet_checkpoint)
-
-	#Initializing and restoring PolyRNN++
-	model = PolygonModel(PolyRNN_metagraph, polyGraph)
-	model.register_eval_fn(lambda input_: evaluator.do_test(evalSess, input_))
-	polySess = tf.Session(config=tf.ConfigProto(
-		allow_soft_placement=True
-	), graph=polyGraph)
-	model.saver.restore(polySess, PolyRNN_checkpoint)
-
-
-	#Initializing and restoring GGNN
-	ggnnGraph = tf.Graph()
-	ggnnModel = GGNNPolygonModel(GGNN_metagraph, ggnnGraph)
-	ggnnSess = tf.Session(config=tf.ConfigProto(
-		allow_soft_placement=True
-	), graph=ggnnGraph)
-
-	ggnnModel.saver.restore(ggnnSess,GGNN_checkpoint)
-
-	#INPUT IMG CROP (224x224x3) -> object should be centered
 	crop_path='image_resize.png'
 
 	#Testing
@@ -373,13 +375,13 @@ if run_rnn==1:
 	#endregion
 
 	#Visualizing TOP_K and scores
-	import matplotlib.pyplot as plt
-	fig, axes = plt.subplots(2,3)
-	axes=np.array(axes).flatten()
-	[vis_polys(axes[i], image_np[0], np.array(pred['polys'][0]), title='score=%.2f' % pred['scores'][0]) for i,pred in enumerate(preds)]
-	plt.draw()
-	plt.pause(10) # pause how many seconds
-	plt.close()
+	# import matplotlib.pyplot as plt
+	# fig, axes = plt.subplots(2,3)
+	# axes=np.array(axes).flatten()
+	# [vis_polys(axes[i], image_np[0], np.array(pred['polys'][0]), title='score=%.2f' % pred['scores'][0]) for i,pred in enumerate(preds)]
+	# plt.draw()
+	# plt.pause(10) # pause how many seconds
+	# plt.close()
 
 	#Let's run GGNN now on the bestPoly
 	bestPoly = preds[0]['polys'][0]
@@ -474,7 +476,7 @@ if run_rnn==1:
 # print(markers)
 	## C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate.py --image image_0.jpg --yolo yolo-coco
 	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate.py --image image_0.jpg --yolo yolo-coco
-	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate.py --image dog.jpg --yolo yolo-coco
+	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate_quick.py --image dog.jpg --yolo yolo-coco
 
 
 
