@@ -411,6 +411,7 @@ if run_rnn==1:
 
 	markers = rnn_markers
 	# Read Images
+	image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 	roi = image.copy()
 	# create image copy
 	temp = roi.copy()
@@ -475,7 +476,7 @@ if run_rnn==1:
 # cv2.destroyWindow("dot")
 # print(markers)
 	## C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate.py --image image_0.jpg --yolo yolo-coco
-	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate.py --image image_0.jpg --yolo yolo-coco
+	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate_quick.py --image image_0.jpg --yolo yolo-coco
 	##C:/Users/salmansaeed.khan/.conda/envs/PolyRNN/python.exe d:/Personal-GIT/mlpractise/ComputerVision/Yolo/yolo_click_crop_rnn_annotate_quick.py --image dog.jpg --yolo yolo-coco
 
 
